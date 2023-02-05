@@ -1,0 +1,8 @@
+Hi {{user.name}},
+
+Thank you for registering with us.
+Please click on the link below or paste this into your browser to enable account access:
+
+https://{{req.headers.host}}/email-confirmation.html?token={{user.unverifiedEmail.token}}
+
+If you did not register a new account, you may safely ignore this email.

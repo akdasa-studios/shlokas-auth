@@ -1,0 +1,7 @@
+Hi {{user.name}},
+
+Please click on the link below or paste this into your browser to confirm your requested email change:
+
+https://{{req.headers.host}}/auth/confirm-email/{{user.unverifiedEmail.token}}
+
+Until the change is confirmed, your previous email remains valid.
