@@ -57,7 +57,10 @@ var config = {
     }
   },
   emailTemplates: {
-    folder: path.join(__dirname, './templates/email')
+    folder: path.join(__dirname, './templates/email'),
+    data: {
+      host: process.env.EMAIL_HOST_LINK || "https://shlokas.app"
+    }
   }
 };
 
