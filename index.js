@@ -41,9 +41,9 @@ var config = {
   mailer: {
     fromEmail: 'Shlokas <akd@shlokas.app>',
     options: {
-      service: 'mail.privateemail.com',
-      host: "mail.privateemail.com",
-      port: 587,
+      service: process.env.EMAIL_HOST || "mail.privateemail.com",
+      host: process.env.EMAIL_HOST || "mail.privateemail.com",
+      port: parseInt(process.env.EMAIL_PORT) || 587,
       secure: false, // upgrade later with STARTTLS
       auth: {
         user: process.env.SHLOKAS_EMAIL,
@@ -66,4 +66,5 @@ var couchAuth = new CouchAuth(config);
 
 // Mount CouchAuth's routes to our app
 app.use('/auth', couchAuth.router);
+app.get("/status", (req, res) => { res.json({ status: "ok" }) })
 app.listen(app.get("port"), "0.0.0.0");
