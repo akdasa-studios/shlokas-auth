@@ -1,0 +1,8 @@
+services:
+  auth:
+    build:
+      context: .
+    environment:
+      - ENV=dev
+    ports:
+      - 80:80

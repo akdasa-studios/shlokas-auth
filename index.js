@@ -14,15 +14,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors())
 
 const connectionString = `http://${process.env.COUCHDB_USER}:${process.env.COUCHDB_PASSWORD}@${process.env.COUCHDB_HOST}:5984`
-console.log(connectionString)
 const nanoDb = nano(connectionString);
-nanoDb.db.get(process.env.SHLOKAS_USERS_DB).catch(x => {
-  nanoDb.db.create(process.env.SHLOKAS_USERS_DB).catch(x => {
-    console.log("Can't create database...", x)
-    throw x
-  })
-  // console.log("Database doesn't exist, exiting...", x); throw x
-})
 
 var config = {
   dbServer: {
