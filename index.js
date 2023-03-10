@@ -58,6 +58,6 @@ var config = {
 var couchAuth = new CouchAuth(config);
 
 // Mount CouchAuth's routes to our app
-app.use('/auth', couchAuth.router);
+app.use('/', couchAuth.router);
 app.get("/status", (req, res) => { res.json({ status: "ok" }) })
 app.listen(app.get("port"), "0.0.0.0");
