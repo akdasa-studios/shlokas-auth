@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
-const cors = require('cors')
 const path = require('path');
 const nano = require('nano')
 const { CouchAuth } = require('@perfood/couch-auth');
@@ -11,7 +10,6 @@ app.set('port', process.env.PORT || 3000);
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cors())
 
 const connectionString = `http://${process.env.COUCHDB_USER}:${process.env.COUCHDB_PASSWORD}@${process.env.COUCHDB_HOST}:5984`
 const nanoDb = nano(connectionString);
