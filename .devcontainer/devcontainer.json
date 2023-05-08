@@ -1,0 +1,25 @@
+{
+  "name": "Shlokas Auth",
+  "dockerComposeFile": [
+    "../docker-compose.yml",
+    "./docker-compose.dev.yml"
+  ],
+  "service": "auth",
+  "workspaceFolder": "/app/shlokas-auth",
+  "shutdownAction": "stopCompose",
+  "overrideCommand": true,
+  "onCreateCommand": ".devcontainer/on_create.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "AbhijoyBasak.nestjs-files",
+        "rubiin.nestjs",
+        "redhat.vscode-yaml",
+        "wayou.vscode-todo-highlight",
+        "Orta.vscode-jest",
+        "mikestead.dotenv"
+      ]
+    }
+  }
+}

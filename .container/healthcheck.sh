@@ -1,0 +1,1 @@
+wget -nv -t1 --spider 'http://localhost:3000/_meta' || exit 1
