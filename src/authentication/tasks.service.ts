@@ -32,8 +32,8 @@ export class TasksService {
   async updateLocalKeys() {
     this.logger.debug('Updating local public keys')
     const publicKey: any = readFileSync(".data/email.auth.strategy.key.pub").toString()
-    this.dbService.setConfig(
-      "jwt_keys", "shlokas", `"${publicKey.replaceAll('\n', '\\\\n')}"`
+    await this.dbService.setConfig(
+      "jwt_keys", "rsa:shlokas", `"${publicKey.replaceAll('\n', '\\\\n')}"`
     )
   }
 }

@@ -14,7 +14,10 @@ import { MailerModule } from '@nestjs-modules/mailer'
     ScheduleModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.data/.env',
+      envFilePath: [
+        '.data/.env',
+        '.data/.env.local'
+      ],
     }),
     MailerModule.forRoot({
       transport: {

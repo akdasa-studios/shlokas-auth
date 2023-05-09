@@ -37,7 +37,6 @@ export class EmailAuthenticationStrategy implements AuthenticationStrategy {
       const token = await this.jwtService.signAsync({
         sub: email,
       })
-      console.log("token", token)
 
       return {
         status: "ok",
