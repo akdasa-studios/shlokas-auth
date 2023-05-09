@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common'
-import { ConfigModule } from '@nestjs/config'
+import { ConfigModule, ConfigService } from '@nestjs/config'
 import { JwtModule, JwtService } from '@nestjs/jwt'
 import { DbService } from '../db.service'
 import { AuthenticationController } from './authentication.controller'
@@ -32,7 +32,6 @@ const res = readFileSync(".data/email.auth.strategy.key").toString()
   ],
   providers: [
     AuthenticationService,
-    AppleService,
     DbService,
     UsersService,
     SessionsService,
@@ -45,12 +44,16 @@ const res = readFileSync(".data/email.auth.strategy.key").toString()
 export class AuthenticationModule {
   constructor(
     private readonly authenticationService: AuthenticationService,
-    private readonly appleService: AppleService,
+    private readonly configService: ConfigService,
     private readonly tasksService: TasksService,
     private readonly jwtService: JwtService,
     private readonly mailerService: MailerService
   ) {
-    this.authenticationService.registerStrategy('apple', new AppleAuthenticationStrategy(appleService))
+    if (this.configService.get('AUTH_APPLE_CLIENT_ID')) {
+      this.authenticationService.registerStrategy(
+        'apple', new AppleAuthenticationStrategy(new AppleService(this.configService))
+      )
+    }
     this.authenticationService.registerStrategy('email', new EmailAuthenticationStrategy(jwtService, mailerService))
     tasksService.updateApplePublicKeys()
     tasksService.updateLocalKeys()
