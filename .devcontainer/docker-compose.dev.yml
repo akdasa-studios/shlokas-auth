@@ -1,0 +1,8 @@
+name: shlokas
+
+
+services:
+  auth:
+    command: sleep infinity
+    volumes:
+      - .:/app/shlokas-auth

@@ -1,8 +1,17 @@
+name: shlokas
+
+
 services:
   auth:
     build:
       context: .
-    environment:
-      - ENV=dev
-    ports:
-      - 80:80
+    expose:
+      - 3000
+    networks:
+      - shlokas
+    hostname: auth
+
+
+networks:
+  shlokas:
+    name: shlokas
