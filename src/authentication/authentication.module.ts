@@ -23,7 +23,7 @@ const res = readFileSync(".data/email.auth.strategy.key").toString()
       global: true,
       privateKey: res,
       signOptions: {
-        keyid: 'rsa:shlokas',
+        keyid: 'shlokas',
         issuer: 'shlokas',
         algorithm: 'RS256',
         expiresIn: '24h'
