@@ -1,12 +1,13 @@
+import { MailerModule } from '@nestjs-modules/mailer'
+import { Module } from '@nestjs/common'
+import { ConfigModule, ConfigService } from '@nestjs/config'
+import { JwtModule } from '@nestjs/jwt'
+import { ScheduleModule } from '@nestjs/schedule'
+import { AuthenticationModule } from './authentication/authentication.module'
 import { UsersService } from './authentication/users.service'
 import { DbService } from './db.service'
-import { Module } from '@nestjs/common'
-import { JwtModule } from '@nestjs/jwt'
-import { AuthenticationModule } from './authentication/authentication.module'
 import { MetaModule } from './meta/meta.module'
-import { ConfigModule } from '@nestjs/config'
-import { ScheduleModule } from '@nestjs/schedule'
-import { MailerModule } from '@nestjs-modules/mailer'
+
 
 @Module({
   imports: [
@@ -19,15 +20,30 @@ import { MailerModule } from '@nestjs-modules/mailer'
         '.data/.env.local'
       ],
     }),
-    MailerModule.forRoot({
-      transport: {
-        host: 'mail',
-        port: 1025,
-        auth: {
-          user: '',
-          pass: '',
+    MailerModule.forRootAsync({
+      useFactory: async (config: ConfigService) => ({
+        transport: {
+          host: config.get('AUTH_EMAIL_HOST'),
+          port: config.get('AUTH_EMAIL_PORT'),
+          secure: false,
+          auth: {
+            user: config.get('AUTH_EMAIL_LOGIN'),
+            pass: config.get('AUTH_EMAIL_PASSWORD'),
+          },
         },
-      }
+        defaults: {
+          from: `"No Reply" <${config.get('AUTH_EMAIL_FROM')}>`,
+          subject: "Shlokas"
+        },
+        // template: {
+        //   dir: join(__dirname, 'templates'),
+        //   adapter: new HandlebarsAdapter(),
+        //   options: {
+        //     strict: true,
+        //   },
+        // },
+      }),
+      inject: [ConfigService],
     }),
     AuthenticationModule, MetaModule
   ],
