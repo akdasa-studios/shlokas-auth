@@ -9,14 +9,30 @@ import { DbService } from "../db.service"
 export class TasksService {
   private readonly logger = new Logger(TasksService.name)
   private readonly applePublikKeysUrl = "https://appleid.apple.com/auth/keys"
+  private readonly googlePublikKeysUrl = "https://www.googleapis.com/oauth2/v3/certs"
 
   constructor(private readonly dbService: DbService) {
   }
 
-  @Cron(CronExpression.EVERY_HOUR)
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async updateApplePublicKeys() {
     this.logger.debug('Updating Apple public keys')
     const response = await fetch(this.applePublikKeysUrl)
+    const keys = (await response.json()).keys
+
+    for (const key of keys) {
+      const pem = jwkToPem(key)
+      const keyId = key.kty.toLowerCase() + ":" + key.kid
+      this.dbService.setConfig(
+        "jwt_keys", keyId, `"${pem.replaceAll('\n', '\\\\n')}"`
+      )
+    }
+  }
+
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  async updateGooglePublicKeys() {
+    this.logger.debug('Updating Google public keys')
+    const response = await fetch(this.googlePublikKeysUrl)
     const keys = (await response.json()).keys
 
     for (const key of keys) {

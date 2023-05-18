@@ -12,6 +12,8 @@ import { TasksService } from './tasks.service'
 import { UsersService } from './users.service'
 import { readFileSync } from 'fs'
 import { MailerService } from '@nestjs-modules/mailer'
+import { GoogleAuthenticationStrategy } from './strategies/apple/google.strategy'
+import { GoogleService } from './strategies/apple/google.service'
 
 
 const res = readFileSync(".data/email.auth.strategy.key").toString()
@@ -54,8 +56,14 @@ export class AuthenticationModule {
         'apple', new AppleAuthenticationStrategy(new AppleService(this.configService))
       )
     }
+    if (this.configService.get('AUTH_GOOGLE_CLIENT_ID')) {
+      this.authenticationService.registerStrategy(
+        'google', new GoogleAuthenticationStrategy(new GoogleService(this.configService))
+      )
+    }
     this.authenticationService.registerStrategy('email', new EmailAuthenticationStrategy(jwtService, mailerService))
     tasksService.updateApplePublicKeys()
+    tasksService.updateGooglePublicKeys()
     tasksService.updateLocalKeys()
   }
 }
