@@ -42,10 +42,18 @@ export class DbService {
     collection: string,
     userId: string,
   ) {
+    const currentPermissions = await this.nano.request({
+      db: collection, method: 'get', path: '_security'
+    })
+    console.log("currentP", currentPermissions)
+    const currentUses = currentPermissions.members.names || []
+    const newUsers = new Set(currentUses)
+    newUsers.add(userId)
+
     await this.nano.request({
       db: collection, method: 'put', path: '_security', body:
       {
-        members: { names: [userId], roles: ['_admin'] },
+        members: { names: Array.from(newUsers), roles: ['_admin'] },
         admins: { names: [], roles: ['_admin'] },
       }
     })

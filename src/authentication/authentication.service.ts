@@ -46,6 +46,7 @@ export class AuthenticationService {
     request: RefreshTokenRequest,
   ) {
     const strategy = this.strategies.get(strategyName)
+    this.logger.debug(`Token refreshed for ${request.userId}`)
     return await strategy.refreshToken(request)
   }
 }

@@ -51,6 +51,16 @@ export class UsersService {
     })
   }
 
+  async updatePermissions(
+    email: string,
+    userId: string,
+  ): Promise<void> {
+    if (!email) { throw new Error('Email is required') }
+
+    const collectionName = this.getGetUserCollectionName(email)
+    await this.dbService.setPermissions(collectionName, userId)
+  }
+
   public getGetUserCollectionName(email: string): string {
     const dbUserId = getUuidByString(email.toLowerCase())
     const collectionName = `user_${dbUserId}`

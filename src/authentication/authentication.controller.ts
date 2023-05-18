@@ -1,4 +1,4 @@
-import { Body, Controller, ForbiddenException, Logger, NotFoundException, Param, Post } from '@nestjs/common'
+import { Body, Controller, ForbiddenException, Logger, NotFoundException, Param, Post, Req } from '@nestjs/common'
 import { UsersService } from './users.service'
 import { SessionsService } from './sessions.service'
 import { AuthenticationService } from './authentication.service'
@@ -18,8 +18,9 @@ export class AuthenticationController {
   @Post(":strategy")
   async authenticate(
     @Param('strategy') strategy: string,
-    @Body() request: AuthenticationRequest
+    @Body() request: AuthenticationRequest,
   ): Promise<AuthenticationResponse|{}> {
+    // TODO: convert email to lowercase
     // Check if the strategy is registered
     if (!this.authenticationService.hasStrategy(strategy)) {
       throw new NotFoundException(`Unknown authentication strategy ${strategy}`)
@@ -29,7 +30,6 @@ export class AuthenticationController {
     const result = await this.authenticationService.authenticate(strategy, {
       authorizationCode: request.authorizationCode
     })
-
 
     // Check if the authentication was successful
     if (result.status === "next")  { return { status: "next step is requred" } }
@@ -42,6 +42,8 @@ export class AuthenticationController {
     if (!isUserExists) {
       this.logger.log(`Creating user ${result.user.email}`)
       await this.usersService.createUser(result.user.email, result.user.id)
+    } else {
+      await this.usersService.updatePermissions(result.user.email, result.user.id)
     }
 
     // Create a new session

@@ -9,14 +9,16 @@
 
 The following environment variables are required to run the app:
 
-| Name                   | Description                           |
-| ---------------------- | ------------------------------------- |
-| `AUTH_APPLE_CLIENT_ID` | Application ID                        |
-| `AUTH_APPLE_TEAM_ID`   | Team ID                               |
-| `AUTH_APPLE_KEY_ID`    | Prvate Key ID                         |
-| `AUTH_APPLE_KEY_PATH`  | Path to private key                   |
-| `AUTH_APPLE_CALLBACK`  | Callback url                          |
-| `AUTH_DB_CONNECTION`   | DB connection string with credentials |
+| Name                        | Description                           |
+| --------------------------- | ------------------------------------- |
+| `AUTH_APPLE_CLIENT_ID`      | Application ID                        |
+| `AUTH_APPLE_TEAM_ID`        | Team ID                               |
+| `AUTH_APPLE_KEY_ID`         | Prvate Key ID                         |
+| `AUTH_APPLE_KEY_PATH`       | Path to private key                   |
+| `AUTH_APPLE_CALLBACK`       | Callback url                          |
+| `AUTH_DB_CONNECTION`        | DB connection string with credentials |
+| `AUTH_GOOGLE_CLIENT_ID`     | Google server client ID               |
+| `AUTH_GOOGLE_CLIENT_SECRET` | Google server secret                  |
 
 ## Files
 
