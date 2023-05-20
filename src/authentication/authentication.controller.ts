@@ -1,4 +1,4 @@
-import { Body, Controller, ForbiddenException, Logger, NotFoundException, Param, Post, Req } from '@nestjs/common'
+import { Body, Controller, ForbiddenException, Logger, NotFoundException, Param, Post } from '@nestjs/common'
 import { UsersService } from './users.service'
 import { SessionsService } from './sessions.service'
 import { AuthenticationService } from './authentication.service'
@@ -19,42 +19,43 @@ export class AuthenticationController {
   async authenticate(
     @Param('strategy') strategy: string,
     @Body() request: AuthenticationRequest,
-  ): Promise<AuthenticationResponse|{}> {
-    // TODO: convert email to lowercase
+  ): Promise<AuthenticationResponse> {
     // Check if the strategy is registered
     if (!this.authenticationService.hasStrategy(strategy)) {
       throw new NotFoundException(`Unknown authentication strategy ${strategy}`)
     }
 
-    // Authenticate the user using the strategy
+    // Authenticate the user using the specified strategy
     const result = await this.authenticationService.authenticate(strategy, {
       authorizationCode: request.authorizationCode
     })
 
     // Check if the authentication was successful
-    if (result.status === "next")  { return { status: "next step is requred" } }
+    if (result.status === "next")  { return { status: "next", message: "Next step is required" } }
     if (result.status === "error") { throw new ForbiddenException("Invalid credentials") }
-    if (!result.token?.idToken)    { throw new ForbiddenException("Invalid credentials") }
-    if (!result.user?.email)       { throw new ForbiddenException("Email is not provided") }
+    if (!result.token.idToken)     { throw new ForbiddenException("Invalid credentials") }
+    if (!result.user.email)        { throw new ForbiddenException("Email is not provided") }
 
     // Create user if it doesn't exist
-    const isUserExists = await this.usersService.isUserExists(result.user.email)
+    const userEmail = result.user.email.toLowerCase()
+    const isUserExists = await this.usersService.isUserExists(userEmail)
     if (!isUserExists) {
-      this.logger.log(`Creating user ${result.user.email}`)
-      await this.usersService.createUser(result.user.email, result.user.id)
+      this.logger.log(`Creating user ${userEmail}`)
+      await this.usersService.createUser(userEmail, result.user.id)
     } else {
-      await this.usersService.updatePermissions(result.user.email, result.user.id)
+      await this.usersService.updatePermissions(userEmail, result.user.id)
     }
 
     // Create a new session
     const session = await this.sessionsService.createSession(result.user.id, strategy, result.token.refreshToken)
-    this.logger.debug(`Created session ${session} for user ${result.user.email}`)
+    this.logger.debug(`Created session ${session} for user ${userEmail}`)
 
     // Return the id token
     return {
+      status: "ok",
       idToken: result.token.idToken,
       sessionId: session,
-      collectionId: this.usersService.getGetUserCollectionName(result.user.email)
+      collectionId: this.usersService.getGetUserCollectionName(userEmail)
     }
   }
 
@@ -83,6 +84,8 @@ export class AuthenticationController {
     })
 
     // Return the id token
-    return { idToken: result.idToken }
+    return {
+      idToken: result.idToken,
+    }
   }
 }

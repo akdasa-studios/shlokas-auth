@@ -82,7 +82,7 @@ export class AppleService {
     const result = await verifyIdToken(idToken)
     return {
       email: result.email,
-      userId: result.sub
+      userId: result.sub,
     }
   }
 

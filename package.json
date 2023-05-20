@@ -19,7 +19,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@akdasa-studios/shlokas-protocol": "^0.0.2",
+    "@akdasa-studios/shlokas-protocol": "^0.0.6",
     "@nestjs-modules/mailer": "^1.8.1",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.3.1",

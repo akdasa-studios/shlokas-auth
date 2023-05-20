@@ -12,6 +12,7 @@ export class AppleAuthenticationStrategy implements AuthenticationStrategy {
   ): Promise<AuthenticationResult> {
     const authToken = await this.appleService.getAuthorizationToken(request.authorizationCode)
     const idToken = await this.appleService.verifyIdToken(authToken.idToken)
+
     return {
       status: "ok",
       token: {

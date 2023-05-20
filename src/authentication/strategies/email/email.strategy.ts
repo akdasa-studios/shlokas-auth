@@ -18,13 +18,9 @@ export class EmailAuthenticationStrategy implements AuthenticationStrategy {
     const email = authorizationCodeTokens[0]
 
     if (authorizationCodeTokens.length === 1) {
-      const validationToken = Math.floor(100000 + Math.random() * 900000).toString()
-      this.mailer.sendMail({
-        to: email,
-        html: `<span title='code'>${validationToken}</span>`
-      })
-
-      codes.set(email, validationToken)
+      const validationCode = this.getValidationCode()
+      this.sendEmailWithValidationCode(email, validationCode)
+      codes.set(email, validationCode)
 
       return { status: "next" }
     } else if (authorizationCodeTokens.length === 2) {
@@ -56,9 +52,22 @@ export class EmailAuthenticationStrategy implements AuthenticationStrategy {
   async refreshToken(
     request: RefreshTokenRequest
   ): Promise<RefreshTokenResponse> {
+    const expiresAt = new Date().getTime() + 60*60*1000
     const token = await this.jwtService.signAsync({
       sub: request.userId,
+      exp: expiresAt
     })
     return { idToken: token }
+  }
+
+  private getValidationCode() {
+    return Math.floor(100000 + Math.random() * 900000).toString()
+  }
+
+  private sendEmailWithValidationCode(email: string, code: string) {
+    this.mailer.sendMail({
+      to: email,
+      html: `<span title='code'>${code}</span>`
+    })
   }
 }

@@ -5,25 +5,22 @@ export class Credentials {
   authorizationCode: string
 }
 
-export interface AuthenticationResult {
-  /**
-   * Authntication status:
-   * - ok: Authentication was successful
-   * - next: Authentication requires another step
-   * - error: Authentication failed
-   **/
-  status: "ok"|"next"|"error"
-
-  /**
-   * Authentication token
-   * - idToken: JWT token
-   * - refreshToken: Refresh token
-   * - email: User email
-   * - userId: User ID
-   */
-  token?: AuthenticationToken
-  user?: User
+export interface AuthenticationSuccessfulResult {
+  status: "ok"
+  token: AuthenticationToken
+  user: User
 }
+
+export interface AuthenticationFailedResult {
+  status: "error"
+}
+
+export interface AuthenticationNextStepRequiredResult {
+  status: "next"
+}
+
+export type AuthenticationResult =
+  AuthenticationSuccessfulResult | AuthenticationFailedResult | AuthenticationNextStepRequiredResult
 
 export interface AuthenticationToken {
   idToken: string

@@ -64,7 +64,7 @@ export class GoogleService {
     })
     return {
       userId: result.getUserId(),
-      email: result.getAttributes().payload.email
+      email: result.getAttributes().payload.email,
     }
   }
 
