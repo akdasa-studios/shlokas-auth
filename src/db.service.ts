@@ -45,7 +45,6 @@ export class DbService {
     const currentPermissions = await this.nano.request({
       db: collection, method: 'get', path: '_security'
     })
-    console.log("currentP", currentPermissions)
     const currentUses = currentPermissions.members.names || []
     const newUsers = new Set(currentUses)
     newUsers.add(userId)

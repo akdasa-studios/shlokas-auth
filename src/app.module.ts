@@ -1,12 +1,15 @@
 import { MailerModule } from '@nestjs-modules/mailer'
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter'
 import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
 import { ScheduleModule } from '@nestjs/schedule'
+import { join } from 'path'
 import { AuthenticationModule } from './authentication/authentication.module'
 import { UsersService } from './authentication/users.service'
 import { DbService } from './db.service'
 import { MetaModule } from './meta/meta.module'
+
 
 
 @Module({
@@ -32,16 +35,15 @@ import { MetaModule } from './meta/meta.module'
           },
         },
         defaults: {
-          from: `"No Reply" <${config.get('AUTH_EMAIL_FROM')}>`,
-          subject: "Shlokas"
+          from: `Shlokas <${config.get('AUTH_EMAIL_FROM')}>`,
         },
-        // template: {
-        //   dir: join(__dirname, 'templates'),
-        //   adapter: new HandlebarsAdapter(),
-        //   options: {
-        //     strict: true,
-        //   },
-        // },
+        template: {
+          dir: join(process.cwd(), 'templates'),
+          adapter: new HandlebarsAdapter(),
+          options: {
+            strict: true,
+          },
+        },
       }),
       inject: [ConfigService],
     }),
