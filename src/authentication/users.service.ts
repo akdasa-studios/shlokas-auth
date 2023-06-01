@@ -45,10 +45,7 @@ export class UsersService {
     await this.dbService.createCollection(collectionName)
     await this.dbService.setPermissions(collectionName, userId)
 
-    await this.dbService.insert("users", {
-      email: email.toLowerCase(),
-      userId: userId,
-    })
+    await this.dbService.insert("users", { email })
   }
 
   async updatePermissions(

@@ -83,6 +83,9 @@ export class AuthenticationController {
       userId: session.userId,
     })
 
+    // Mark session as live
+    await this.sessionsService.markSessionLive(request.sessionId)
+
     // Return the id token
     return {
       idToken: result.idToken,

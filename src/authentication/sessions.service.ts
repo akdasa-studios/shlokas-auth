@@ -40,4 +40,12 @@ export class SessionsService {
   ): Promise<Session> {
     return await this.dbService.get("sessions", sessionId)
   }
+
+  async markSessionLive(
+    sessionId: string,
+  ): Promise<void> {
+    const session = await this.dbService.get("sessions", sessionId)
+    session.refreshedAt = new Date().getTime()
+    await this.dbService.insert("sessions", session)
+  }
 }
