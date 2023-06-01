@@ -68,7 +68,7 @@ export class EmailAuthenticationStrategy implements AuthenticationStrategy {
   private sendEmailWithValidationCode(email: string, code: string) {
     this.mailer.sendMail({
       to: email,
-      subject: 'Your validation code',
+      subject: `${code} is your confirmation code`,
       template: 'auth-email',
       context: {
         code: code
