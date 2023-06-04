@@ -43,15 +43,18 @@ export class AuthenticationController {
       this.logger.log(`Creating user ${userEmail}`)
       await this.usersService.createUser(userEmail, result.user.id)
     } else {
+      this.logger.log(`Updating permissions for user ${userEmail}: ${result.user.id}`)
       await this.usersService.updatePermissions(userEmail, result.user.id)
     }
 
     // Create a new session, if the user is not a test user
-
     const session = userEmail !== "test@shlokas.app"
       ? await this.sessionsService.createSession(result.user.id, strategy, result.token.refreshToken)
       : "test-session"
     this.logger.debug(`Created session ${session} for user ${userEmail}`)
+
+    // Debug
+    this.logger.debug(`Token: ${result.token.idToken}`)
 
     // Return the id token
     return {
